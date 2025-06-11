@@ -32,7 +32,7 @@ jobs:
 
       - name: Create Redis Database
         run: |
-          REDIS_DATABASE_URL=$(APTIBLE_OUTPUT_FORMAT=json aptible db:create "${{ env.APTIBLE_APP_NAME }}-redis" --environment ${{ env.APTIBLE_ENVIRONMENT }} --type redis --version 7 | jq -r '.connection_url')
+          REDIS_DATABASE_URL=$(APTIBLE_OUTPUT_FORMAT=json aptible db:create "${{ env.APTIBLE_APP_NAME }}-redis" --environment ${{ env.APTIBLE_ENVIRONMENT }} --type redis --version 7.0-aof | jq -r '.connection_url')
           echo "REDIS_DATABASE_URL=$REDIS_DATABASE_URL" >> $GITHUB_ENV || exit 0
 
       - name: Create and Configure App
@@ -53,7 +53,7 @@ jobs:
         uses: aptible/aptible-deploy-action@v4
         with:
           type: git
-          username: ${{ secrets.APTIBLE_ROBOT_USERNAME }}
+          username: ${{ vars.APTIBLE_ROBOT_USERNAME }}
           password: ${{ secrets.APTIBLE_ROBOT_PASSWORD }}
           environment: ${{ env.APTIBLE_ENVIRONMENT }}
           app: ${{ env.APTIBLE_APP_NAME }}
