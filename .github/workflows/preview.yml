@@ -19,7 +19,7 @@ jobs:
       - name: Install aptible CLI
         run: |
           PKG="$(mktemp)"
-          curl -fsSL "$CLI_URL" > "$PKG"
+          curl -fsSL "${{ env.CLI_URL }}" > "$PKG"
           sudo dpkg -i "$PKG"
           rm "$PKG"
 
