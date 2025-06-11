@@ -6,7 +6,7 @@ on:
 env:
   APTIBLE_ENVIRONMENT: preview-apps
   APTIBLE_APP_NAME: demo-pr-${{ github.event.number }}
-  CLI_URL: ${{ vars.APTIBLE_CLI_URL_UBUNTU }}
+  CLI_URL: https://omnibus-aptible-toolbelt.s3.amazonaws.com/aptible/omnibus-aptible-toolbelt/latest/aptible-toolbelt_latest_ubuntu-1604_amd64.deb
 
 jobs:
   deploy:
