@@ -57,20 +57,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract tags for Docker images
-        id: docker-meta
-        uses: docker/metadata-action@v3
-        with:
-          images: ${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-
       - name: Build and push Docker images
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: ${{ steps.docker-meta.outputs.tags }}
+          tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
       - name: Deploy to Aptible
         uses: aptible/aptible-deploy-action@v4
