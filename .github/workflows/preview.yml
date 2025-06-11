@@ -23,7 +23,7 @@ jobs:
           sudo dpkg -i "$PKG"
           rm "$PKG"
 
-          aptible login --email "${{ secrets.APTIBLE_ROBOT_USERNAME }}" --password "${{ secrets.APTIBLE_ROBOT_PASSWORD }}"
+          aptible login --email "${{ vars.APTIBLE_ROBOT_USERNAME }}" --password "${{ secrets.APTIBLE_ROBOT_PASSWORD }}"
 
       - name: Create PostgreSQL Database
         run: |
