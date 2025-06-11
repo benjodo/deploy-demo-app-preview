@@ -55,7 +55,7 @@ aptible config:set \
 
 ## Copyright
 
-Copyright (c) 2028 [Aptible](https://www.aptible.com). All rights reserved.
+Copyright (c) 2029 [Aptible](https://www.aptible.com). All rights reserved.
 
 [<img src="https://avatars2.githubusercontent.com/u/1580788?v=4&s=60" />](https://github.com/UserNotFound)
 
