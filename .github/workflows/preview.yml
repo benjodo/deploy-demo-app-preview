@@ -28,12 +28,12 @@ jobs:
       - name: Create PostgreSQL Database
         run: |
           PG_DATABASE_URL=$(APTIBLE_OUTPUT_FORMAT=json aptible db:create "${{ env.APTIBLE_APP_NAME }}-pg" --environment ${{ env.APTIBLE_ENVIRONMENT }} --type postgresql --version 14 | jq -r '.connection_url')
-          echo "PG_DATABASE_URL=$PG_DATABASE_URL" >> $GITHUB_ENV
+          echo "PG_DATABASE_URL=$PG_DATABASE_URL" >> $GITHUB_ENV || exit 0
 
       - name: Create Redis Database
         run: |
           REDIS_DATABASE_URL=$(APTIBLE_OUTPUT_FORMAT=json aptible db:create "${{ env.APTIBLE_APP_NAME }}-redis" --environment ${{ env.APTIBLE_ENVIRONMENT }} --type redis --version 7 | jq -r '.connection_url')
-          echo "REDIS_DATABASE_URL=$REDIS_DATABASE_URL" >> $GITHUB_ENV
+          echo "REDIS_DATABASE_URL=$REDIS_DATABASE_URL" >> $GITHUB_ENV || exit 0
 
       - name: Create and Configure App
         run: |
