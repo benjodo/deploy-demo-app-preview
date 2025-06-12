@@ -1,0 +1,52 @@
+name: Deprovision staging
+
+on:
+  pull_request:
+    types: ['closed']
+
+env:
+  APTIBLE_ENVIRONMENT: preview-apps
+  IMAGE_NAME: aptible/deploy-demo-app
+  APTIBLE_APP_NAME: demo-pr-${{ github.event.number }}
+  TAG: pr-${{ github.event.number }}
+  CLI_URL: https://omnibus-aptible-toolbelt.s3.amazonaws.com/aptible/omnibus-aptible-toolbelt/latest/aptible-toolbelt_latest_ubuntu-1604_amd64.deb
+  
+
+jobs:
+  deprovision-app:
+    name: Deprovision Review App and Databases
+    runs-on: ubuntu-24.04
+    steps:
+     - name: Install aptible CLI
+        run: |
+          PKG="$(mktemp)"
+          curl -fsSL "${{ env.CLI_URL }}" > "$PKG"
+          sudo dpkg -i "$PKG"
+          rm "$PKG"
+
+          aptible login --email "${{ vars.APTIBLE_ROBOT_USERNAME }}" --password "${{ secrets.APTIBLE_ROBOT_PASSWORD }}"
+
+      - name: Deprovision app
+        run: |
+          aptible apps:deprovision  --environment ${{ env.APTIBLE_ENVIRONMENT }} ${{ env.APTIBLE_APP_NAME }} || exit 0
+
+      - name: Deprovision PostgreSQL Database
+        run: |
+          aptible db:deprovision --environment ${{ env.APTIBLE_ENVIRONMENT }} ${{ env.APTIBLE_APP_NAME }}-pg || exit 0
+
+      - name: Deprovision Redis Database
+        run: |
+          aptible db:deprovision --environment ${{ env.APTIBLE_ENVIRONMENT }} ${{ env.APTIBLE_APP_NAME }}-redis || exit 0
+
+  # delete-tag:
+  #   name: Delete remote Docker tag
+  #   runs-on: ubuntu-24.04
+  #   steps:
+  #     - name: Authenticate and delete tag from DockerHub
+  #       run: |
+  #         creds='{ "username": "${{ secrets.DOCKERHUB_USERNAME }}", "password": "${{ secrets.DOCKERHUB_PASSWORD }}" }'
+  #         token="$(curl --fail -XPOST -H 'Content-Type: application/json' https://hub.docker.com/v2/users/login -d "$creds" | jq -r '.token')"
+
+  #         # At the time of writing this API endpoint is not documented but this is what the web app uses
+  #         set -e
+  #         curl --fail -XDELETE -H "Authorization: Bearer ${token}" https://hub.docker.com/v2/repositories/${{ env.IMAGE_NAME }}/tags/${{ env.TAG }}
