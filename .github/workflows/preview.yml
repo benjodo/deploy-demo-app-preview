@@ -74,3 +74,7 @@ jobs:
           docker_img: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
           private_registry_username: ${{ secrets.DOCKERHUB_USERNAME }}
           private_registry_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Create App Endpoint
+        run: |
+          aptible endpoints:https:create --environment ${{ env.APTIBLE_ENVIRONMENT }} --app ${{ env.APTIBLE_APP_NAME }} --default-domain "web" || exit 0
