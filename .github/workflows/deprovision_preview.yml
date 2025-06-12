@@ -26,27 +26,14 @@ jobs:
 
           aptible login --email "${{ vars.APTIBLE_ROBOT_USERNAME }}" --password "${{ secrets.APTIBLE_ROBOT_PASSWORD }}"
 
-      - name: Deprovision app
+     - name: Deprovision app
         run: |
           aptible apps:deprovision  --environment ${{ env.APTIBLE_ENVIRONMENT }} ${{ env.APTIBLE_APP_NAME }} || exit 0
 
-      - name: Deprovision PostgreSQL Database
+     - name: Deprovision PostgreSQL Database
         run: |
           aptible db:deprovision --environment ${{ env.APTIBLE_ENVIRONMENT }} ${{ env.APTIBLE_APP_NAME }}-pg || exit 0
 
-      - name: Deprovision Redis Database
+    - name: Deprovision Redis Database
         run: |
           aptible db:deprovision --environment ${{ env.APTIBLE_ENVIRONMENT }} ${{ env.APTIBLE_APP_NAME }}-redis || exit 0
-
-  # delete-tag:
-  #   name: Delete remote Docker tag
-  #   runs-on: ubuntu-24.04
-  #   steps:
-  #     - name: Authenticate and delete tag from DockerHub
-  #       run: |
-  #         creds='{ "username": "${{ secrets.DOCKERHUB_USERNAME }}", "password": "${{ secrets.DOCKERHUB_PASSWORD }}" }'
-  #         token="$(curl --fail -XPOST -H 'Content-Type: application/json' https://hub.docker.com/v2/users/login -d "$creds" | jq -r '.token')"
-
-  #         # At the time of writing this API endpoint is not documented but this is what the web app uses
-  #         set -e
-  #         curl --fail -XDELETE -H "Authorization: Bearer ${token}" https://hub.docker.com/v2/repositories/${{ env.IMAGE_NAME }}/tags/${{ env.TAG }}
