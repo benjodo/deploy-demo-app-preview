@@ -28,12 +28,12 @@ jobs:
 
       - name: Deprovision app
         run: |
-          aptible apps:deprovision  --app  ${{ env.APTIBLE_APP_NAME }} --environment ${{ env.APTIBLE_ENVIRONMENT }} || exit 0
+          aptible apps:deprovision --app ${{ env.APTIBLE_APP_NAME }} --environment ${{ env.APTIBLE_ENVIRONMENT }} || exit 0
 
       - name: Deprovision PostgreSQL Database
         run: |
-          aptible db:deprovision --environment ${{ env.APTIBLE_ENVIRONMENT }} ${{ env.APTIBLE_APP_NAME }}-pg || exit 0
+          aptible db:deprovision ${{ env.APTIBLE_APP_NAME }}-pg --environment ${{ env.APTIBLE_ENVIRONMENT }} || exit 0
 
       - name: Deprovision Redis Database
         run: |
-          aptible db:deprovision --environment ${{ env.APTIBLE_ENVIRONMENT }} ${{ env.APTIBLE_APP_NAME }}-redis || exit 0
+          aptible db:deprovision ${{ env.APTIBLE_APP_NAME }}-redis --environment ${{ env.APTIBLE_ENVIRONMENT }} || exit 0
